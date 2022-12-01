@@ -8,7 +8,7 @@ create table PESSOA (
     nproprio varchar(10),
     apelido varchar(15),
     morada varchar(150),
-    numtelef varchar(15),
+    codpostal varchar(15),
     localidade varchar(150),
     atrdisc char(2) CHECK (atrdisc = 'P' OR atrdisc = 'C' OR atrdisc = 'CL')
 );
@@ -28,7 +28,7 @@ create table TIPOVEICULO(
 
 create table VEICULO(
     id integer NOT NULL PRIMARY KEY,
-    matricula varchar(10) UNIQUE CHECK ( matricula ~ '^([0-9][0-9][A-Z][A-Z][0-9][0-9]) | ([A-Z][A-Z][0-9][0-9][A-Z][A-Z])$') ,
+    matricula varchar(10) UNIQUE CHECK ( matricula ~* '^[A-Z]{2}[0-9]{2}[A-Z]{2}$') ,
     tipo integer,
     modelo varchar(10),
     marca varchar(10),
@@ -41,7 +41,7 @@ create table VEICULO(
 
 create table CONDUTOR(
     idpessoa integer UNIQUE ,
-    ncconducao varchar(20) CHECK (ncconducao ~ '^([a-z][a-z]\-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])$'),
+    ncconducao varchar(20) CHECK (ncconducao ~ '^([a-z]{2}\-[0-9]{9})$'),
     dtnascimento date CHECK (date_part('year',current_date)-date_part('year',dtnascimento) >= 18),
     FOREIGN KEY (idpessoa) REFERENCES PESSOA(id)
     ON DELETE CASCADE
@@ -108,7 +108,6 @@ create table CLIENTEVIAGEM(
     FOREIGN KEY (viagem) REFERENCES VIAGEM(idsistema)
     ON DELETE CASCADE
 );
-
 
 
 COMMIT ;
