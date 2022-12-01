@@ -28,7 +28,7 @@ create table TIPOVEICULO(
 
 create table VEICULO(
     id integer NOT NULL PRIMARY KEY,
-    matricula varchar(10) UNIQUE CHECK ( matricula ~* '^[A-Z]{2}[0-9]{2}[A-Z]{2}$') ,
+    matricula varchar(10) UNIQUE CHECK ( matricula ~* '^([A-Z]{2}[0-9]{2}[A-Z]{2})$' OR '^([0-9]{2}[A-Z]{2}[0-9]{2})$') ,
     tipo integer,
     modelo varchar(10),
     marca varchar(10),
