@@ -1,0 +1,11 @@
+drop table clienteviagem;
+drop table viagem;
+drop table periodoactivo;
+drop table corveiculo;
+drop table contacto;
+drop table condhabilitado;
+drop table condutor;
+drop table veiculo;
+drop table tipoveiculo;
+drop table proprietario;
+drop table pessoa
