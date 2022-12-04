@@ -1,3 +1,5 @@
+BEGIN;
+
 --2(C)
 select id,nproprio,apelido,viagensOn2021
 from (select id,nproprio,apelido,count(dtviagem) as viagensOn2021
@@ -6,7 +8,7 @@ from (select id,nproprio,apelido,count(dtviagem) as viagensOn2021
             where viagem.condutor=periodoactivo.condutor AND dtviagem::text LIKE '2021%') as date
         where id=date.condutor
     group by id) viagens
-where viagens.viagensOn2021=(select max(viagensOn2021) from (select id,nproprio,apelido,count(dtviagem) as viagensOn2021
+where viagens.viagensOn2021=(select max(viagensOn2021) from (select count(dtviagem) as viagensOn2021
         from pessoa,(select periodoactivo.condutor,dtviagem
             from periodoactivo,viagem
             where viagem.condutor=periodoactivo.condutor AND dtviagem::text LIKE '2021%') as date
@@ -29,14 +31,22 @@ select id,nproprio,apelido,nif
 where id=NRV.idpessoa;
 
 
+--2(E)
+select nproprio,apelido,viagens2021.NumerodeViajens
+    from pessoa join (select viagem.condutor,count(dtviagem) as NumerodeViajens
+    from viagem
+where dtviagem::text LIKE '2021%'
+group by viagem.condutor) as viagens2021 on pessoa.id = viagens2021.condutor;
+
+
 --3(B)
-select veiculo , count(dtviagem) as NumeroDeViagens
+select veiculo , count(veiculo) as NumeroDeViagens
     from viagem,(select veiculo.id,proprietario
             from veiculo,(select id
                 from pessoa
-                where nif='123456789123') as prop
+                where nif='723718467261') as prop
             where prop.id=proprietario) as v
-    where dtviagem::text LIKE '2021%' and veiculo=v.proprietario
+    where veiculo=v.id
     group by veiculo;
 
 --3(C)
@@ -54,8 +64,34 @@ select id,noident,nproprio,apelido,morada
 where pessoa.id=maxTotal.condutor
 ;
 
+--3(D)
+select nproprio,apelido,viagens2021.NumerodeViagens
+    from pessoa join (select viagem.condutor,count(dtviagem) as NumerodeViagens
+    from viagem
+where dtviagem::text LIKE '2021%'
+group by viagem.condutor) as viagens2021 on pessoa.id = viagens2021.condutor and viagens2021.NumerodeViagens < 3;
 
 
+--3(E)
+--) Crie uma vista CONDUTORVIAGENSPORANO que permita produzir, para cada condutor em cada ano, o total de viagens e a soma dos precos finais dessas viagens.
+
+CREATE VIEW CONDUTORVIAGENSPORANO AS
+select distinct condutor,count(condutor) as NumerodeViagens,sum(valfinal),(date_part('year',dtviagem)) as Year
+from viagem
+group by year, condutor;
+
+
+--3(F)
+
+CREATE TABLE ViagensAnuais as (
+    select distinct idpessoa,nproprio,apelido,count(idpessoa) as numerodeviagens, date_part ('year',dtviagem) as ano
+    from clienteviagem,viagem,pessoa
+    where extract(year from dtviagem)=2021 and pessoa.id=clienteviagem.idpessoa
+    group by idpessoa,nproprio,apelido,dtviagem,ano);
+
+
+
+COMMIT;
 
 
 
