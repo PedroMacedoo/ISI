@@ -73,8 +73,6 @@ group by viagem.condutor) as viagens2021 on pessoa.id = viagens2021.condutor and
 
 
 --3(E)
---) Crie uma vista CONDUTORVIAGENSPORANO que permita produzir, para cada condutor em cada ano, o total de viagens e a soma dos precos finais dessas viagens.
-
 CREATE VIEW CONDUTORVIAGENSPORANO AS
 select distinct condutor,count(condutor) as NumerodeViagens,sum(valfinal),(date_part('year',dtviagem)) as Year
 from viagem
@@ -89,7 +87,15 @@ CREATE TABLE ViagensAnuais as (
     where extract(year from dtviagem)=2021 and pessoa.id=clienteviagem.idpessoa
     group by idpessoa,nproprio,apelido,dtviagem,ano);
 
+--4
+alter table tipoveiculo drop CONSTRAINT designacao ;
+alter table tipoveiculo ADD CONSTRAINT designacao CHECK ( designacao = 'Premium' OR designacao = 'Normal' OR designacao = 'XL' OR designacao = 'Luxo' );
+insert into tipoveiculo(nlugares,designacao, multiplicador)
+VALUES (4,'Premium',4);
 
+UPDATE veiculo
+    set tipo=(select tipo from tipoveiculo where designacao='Premium')
+    where modelo='RangeRover';
 
 COMMIT;
 

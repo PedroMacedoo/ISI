@@ -36,7 +36,9 @@ insert into veiculo(matricula, tipo, modelo, marca, ano, proprietario) Values
 ('01DD22',3,'Mustang','Ford',2019,10),
 ('44CC22',1,'Wagoneer','Jeep',2020,3),
 ('00NN00',2,'CRV','Honda',2018,2),
-('CX15DF',1,'Fiesta','Ford',2020,10);
+('CX15DF',1,'Fiesta','Ford',2020,10),
+('35MO21',2,'RangeRover','LandRover',2018,2);
+
 
 
 insert into condutor(idpessoa, ncconducao, dtnascimento)Values

@@ -23,7 +23,7 @@ create table TIPOVEICULO(
     tipo serial PRIMARY KEY ,
     nlugares integer CHECK (nlugares BETWEEN 1 and 7),
     multiplicador numeric(1),
-    designacao char(10) CHECK (designacao = 'Normal' OR designacao = 'XL' OR designacao = 'Luxo')
+    designacao char(10) constraint designacao CHECK (designacao = 'Normal' OR designacao = 'XL' OR designacao = 'Luxo')
 );
 
 create table VEICULO(
