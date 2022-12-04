@@ -1,4 +1,25 @@
 BEGIN;
+--3(A)
+--2(A)
+SELECT p.id, p.nif, p.nproprio, p.apelido, viagem.dtviagem, viagem.hinicio, viagem.hfim, viagem.valfinal
+FROM pessoa as p
+INNER JOIN clienteviagem
+    ON p.id = clienteviagem.idpessoa AND p.nproprio = 'Antonio' AND p.apelido = 'Silva'
+INNER JOIN viagem
+    ON clienteviagem.viagem = viagem.idsistema;
+
+--2(B)
+SELECT p2.nproprio, p2.noident
+FROM condutor as c
+INNER JOIN condhabilitado c2
+    ON c.idpessoa = c2.condutor
+INNER JOIN veiculo v
+    ON v.proprietario = (SELECT p.id
+    FROM pessoa p
+    WHERE p.nproprio = 'Bruno')
+INNER JOIN pessoa p2
+    ON p2.id = c.idpessoa
+GROUP BY p2.nproprio, p2.noident;
 
 --2(C)
 select id,nproprio,apelido,viagensOn2021
@@ -38,7 +59,7 @@ select nproprio,apelido,viagens2021.NumerodeViajens
 where dtviagem::text LIKE '2021%'
 group by viagem.condutor) as viagens2021 on pessoa.id = viagens2021.condutor;
 
-
+------------------------------------------------------------------------------
 --3(B)
 select veiculo , count(veiculo) as NumeroDeViagens
     from viagem,(select veiculo.id,proprietario
